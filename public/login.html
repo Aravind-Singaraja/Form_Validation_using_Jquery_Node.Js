@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <link rel="stylesheet" href="style1.css">
+  </head>
+  <body>
+    <div class="background-container">
+      <div class="input_container">
+        <form id="loginForm">
+            <h1 style="text-align: center;">LOGIN</h1>
+          <div class="input_rows">
+            <input
+              type="email"
+              name="email"
+              id="email"
+              placeholder="Email"
+              required
+            />
+          </div>
+          <div class="input_rows">
+            <input
+              type="password"
+              name="password"
+              id="password"
+              placeholder="Password"
+              required
+            />
+          </div><br>
+          <div class="addButton">
+            <center><input type="submit" value="Submit" id ="submit" /></center>
+          </div>
+          <br />
+         <center> Create an Account? <a href="Register.html" >Signup</a></center>
+        </form>
+        <script src="loginValidation.js"></script>
+      </div>
+    </div>
+  </body>
+</html>

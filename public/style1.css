@@ -1,0 +1,61 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+h1{
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.background-container {
+    background-image: url('./R.jpg');
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.input_container {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 30px;
+    width: 40%;
+    height: 45%;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.input_rows {
+    margin-bottom: 15px;
+}
+
+.input_rows input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.addButton input {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.addButton input:hover {
+    background-color: #45a049;
+}
+a{
+    cursor: pointer;
+}
+label.error {
+    display: block;
+    color: red;
+    font-size: 12px;
+  }
