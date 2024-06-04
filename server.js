@@ -2,6 +2,7 @@ const express = require("express");
 const mysql = require("mysql2");
 const bodyParser = require("body-parser");
 const path = require("path");
+
 const bcrypt = require("bcryptjs");
 const port = 5000;
 const app = express();
@@ -27,56 +28,67 @@ app.get("/", (req, res) => {
 
 app.post("/submit", (req, res) => {
   const { fname, lname, email, password } = req.body;
-  const saltRounds = 10;
-  bcrypt.hash(password, saltRounds, (err, hashedPassword) => {
+
+  // Hashing password using bcryptjs
+  bcrypt.genSalt(10, (err, salt) => {
     if (err) {
-      console.error("Password can't be hashed", err);
+      console.error("Error generating salt:", err);
       res.status(500).send({
         status: 0,
         message: "Error hashing password",
       });
       return;
     }
-
-    const existDataQuery = "SELECT * FROM users WHERE email = ?";
-    connection.query(existDataQuery, [email], (err, data) => {
+    bcrypt.hash(password, salt, (err, hashedPassword) => {
       if (err) {
-        console.error("Error occurred during email check", err);
+        console.error("Error hashing password:", err);
         res.status(500).send({
           status: 0,
-          message: "Error checking email",
+          message: "Error hashing password",
         });
         return;
       }
 
-      if (data.length > 0) {
-        res.send({
-          status: 2,
-          message: "Email already exists",
-        });
-      } else {
-        const sql =
-          "INSERT INTO users (fname, lname, email, password) VALUES (?, ?, ?, ?)";
-        connection.query(
-          sql,
-          [fname, lname, email, hashedPassword],
-          (err, result) => {
-            if (err) {
-              console.error("Error inserting data", err);
+      const existDataQuery = "SELECT * FROM users WHERE email = ?";
+      connection.query(existDataQuery, [email], (err, data) => {
+        if (err) {
+          console.error("Error occurred during email check", err);
+          res.status(500).send({
+            status: 0,
+            message: "Error checking email",
+          });
+          return;
+        }
+
+        if (data.length > 0) {
+          res.send({
+            status: 2,
+            message: "Email already exists",
+          });
+        } else {
+          const sql =
+            "INSERT INTO users (fname, lname, email, password) VALUES (?, ?, ?, ?)";
+          connection.query(
+            sql,
+            [fname, lname, email, hashedPassword],
+            (err, result) => {
+              if (err) {
+                console.error("Error inserting data", err);
+                res.send({
+                  status: 0,
+                  message: "Error occurred while adding the data",
+                  data: err,
+                });
+                return;
+              }
               res.send({
-                status: 0,
-                message: "Error occurred while adding the data",
-                data: err,
+                status: 1,
+                message: "User data inserted successfully",
               });
-              return;
             }
-            res.send({
-              status: 1,
-              message: "User data inserted successfully",
-            });
-          }
-        );
-      }
+          );
+        }
+      });
     });
   });
 });
@@ -93,7 +105,7 @@ app.post("/login", (req, res) => {
     }
 
     if (data.length === 0) {
-       res.status(404).send({
+      res.status(404).send({
         status: 0,
         message: "Email doesn't exist",
       });
@@ -101,7 +113,7 @@ app.post("/login", (req, res) => {
     }
     const hashedPassword = data[0].password;
     bcrypt.compare(password, hashedPassword, (err, result) => {
-      console.log(result)
+      console.log(result);
       if (err) {
         return res.status(500).send({
           status: 0,
@@ -131,13 +143,14 @@ app.get("/getData", (req, res) => {
       return res.status(500).send({
         status: 1,
         message: "Error retrieving data from the database",
-        error: err
       });
     }
     if (result.length === 0) {
       return res.status(404).send({
         status: 2,
-        message: "No data found"
+
+        message: "No data found",
+
       });
     }
     return res.send({
