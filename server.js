@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 
 const connection = mysql.createConnection({
   host: "localhost",
-  database: "test",
+  database: "user_database",
   user: "root",
   password: "",
 });
@@ -123,7 +123,30 @@ app.post("/login", (req, res) => {
     });
   });
 });
-
+app.get("/getData", (req, res) => {
+  const retriveData = "SELECT * FROM users";
+  connection.query(retriveData, (err, result) => {
+    if (err) {
+      console.error("Error retrieving data:", err);
+      return res.status(500).send({
+        status: 1,
+        message: "Error retrieving data from the database",
+        error: err
+      });
+    }
+    if (result.length === 0) {
+      return res.status(404).send({
+        status: 2,
+        message: "No data found"
+      });
+    }
+    return res.send({
+      status: 0,
+      message: "Data retrieved successfully",
+      data: result
+    });
+  });
+});
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
